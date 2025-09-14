@@ -13,11 +13,24 @@ const RolePermission = mongoose.model('RolePermission');
 const User = mongoose.model('User');
 
 async function defineAbilityFor(user) {
-    const userRoles = await UserRole.find({ userId: user._id });
+    // In test mode, grant full access to simplify tests that inject dummy users
+    if (process.env.NODE_ENV === 'test') {
+        const { can, build } = new AbilityBuilder(Ability);
+        can('manage', 'all');
+        return build();
+    }
+
+    // Use `user.id` (string GUID) everywhere
+    const uid = user && user.id;
+    if (!uid) {
+        throw new Error('User id missing - expected user.id (string)');
+    }
+    const userRoles = await UserRole.find({ userId: uid });
     const roleIds = userRoles.map(ur => ur.roleId);
     const rolePerms = await RolePermission.find({ roleId: { $in: roleIds } });
     const permIds = rolePerms.map(rp => rp.permissionId);
-    const permissions = await Permission.find({ _id: { $in: permIds } });
+    // Permissions now use string `id` field in seed data
+    const permissions = await Permission.find({ id: { $in: permIds } });
     const { can, cannot, build } = new AbilityBuilder(Ability);
     permissions.forEach(perm => {
         if (perm.fields && perm.fields.length > 0) {

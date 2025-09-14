@@ -1,6 +1,7 @@
 // test/rbac.e2e.test.js
 const request = require('supertest');
 const mongoose = require('mongoose');
+const express = require('express');
 const app = require('../src/app');
 const User = mongoose.model('User');
 
@@ -22,8 +23,8 @@ describe('RBAC API (live DB)', () => {
     beforeAll(async () => {
         // Seed RBAC and form data
         const { execSync } = require('child_process');
-        execSync('node ./db/rbac_generate.js');
-        execSync('node ./db/formdata_generate.js');
+        execSync('node ./dbseeding/rbac_generate.js');
+        execSync('node ./dbseeding/formdata_generate.js');
         await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/rbac_demo');
         server = app.listen(4000);
     });

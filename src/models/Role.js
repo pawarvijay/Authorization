@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const roleSchema = new mongoose.Schema({
+    id: String,
     name: String,
     description: String
 });

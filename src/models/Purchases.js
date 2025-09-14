@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 const purchasesSchema = new mongoose.Schema({
-    id: { type: String, default: uuidv4 },
+    id: { type: String, default: () => randomUUID() },
     item: String,
     quantity: Number,
     price: Number,

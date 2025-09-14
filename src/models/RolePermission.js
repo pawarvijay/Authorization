@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const rolePermissionSchema = new mongoose.Schema({
-    roleId: mongoose.Schema.Types.ObjectId,
-    permissionId: mongoose.Schema.Types.ObjectId,
+    roleId: String,
+    permissionId: String,
     roleName: String,
     permissionName: String
 });

@@ -1,5 +1,7 @@
 
 const request = require('supertest');
+// Increase default Jest timeout for slow DB seed operations
+jest.setTimeout(30000);
 const express = require('express');
 const purchaseRoutes = require('../src/routes/purchase');
 const mongoose = require('mongoose');
@@ -7,9 +9,10 @@ const { execSync } = require('child_process');
 
 const app = express();
 app.use(express.json());
-// Inject a user with all permissions for test
+// Attach test user (will be populated in beforeAll)
+let testUser = null;
 app.use((req, res, next) => {
-    req.user = { _id: 'testuserid' };
+    req.user = testUser;
     next();
 });
 app.use('/api/purchase', purchaseRoutes);
@@ -18,9 +21,13 @@ app.use('/api/purchase', purchaseRoutes);
 describe('Purchase API', () => {
     beforeAll(async () => {
         // Seed RBAC and form data
-        execSync('node ./db/rbac_generate.js');
-        execSync('node ./db/formdata_generate.js');
+        execSync('node ./dbseeding/rbac_generate.js');
+        execSync('node ./dbseeding/formdata_generate.js');
         await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/rbac_demo');
+        // Fetch a real user from the seeded DB and attach its id for tests
+        const User = mongoose.model('User');
+        const user = await User.findOne({ username: 'jackob' });
+        if (user) testUser = { id: user.id };
     });
     afterAll(async () => {
         await mongoose.disconnect();
