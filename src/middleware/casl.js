@@ -12,14 +12,12 @@ const UserRole = mongoose.model('UserRole');
 const RolePermission = mongoose.model('RolePermission');
 const User = mongoose.model('User');
 
+// defineAbilityFor: build user's Ability from persisted RolePermission data.
+// Notes:
+// - Uses `user.id` (string GUID) as the canonical user identifier.
+// - Permissions are stored with string `id` fields in the seed data.
+// - No global test-mode bypass is used; tests should seed the required permissions.
 async function defineAbilityFor(user) {
-    // In test mode, grant full access to simplify tests that inject dummy users
-    if (process.env.NODE_ENV === 'test') {
-        const { can, build } = new AbilityBuilder(Ability);
-        can('manage', 'all');
-        return build();
-    }
-
     // Use `user.id` (string GUID) everywhere
     const uid = user && user.id;
     if (!uid) {
@@ -48,6 +46,12 @@ function caslMiddleware(action, subject, fields) {
             const user = req.user; // Assume user is attached to req
             if (!user) return res.status(401).json({ error: 'Unauthorized' });
             const ability = await defineAbilityFor(user);
+            // Enforce that the user must have READ permission on the subject
+            // before any other permission is evaluated. This centralizes the
+            // requirement that all requests require read access by default.
+            if (!ability.can('read', subject)) {
+                return res.status(403).json({ error: 'Forbidden (read denied)' });
+            }
             if (fields) {
                 ForbiddenError.from(ability).throwUnlessCan(action, subject, fields);
             } else {

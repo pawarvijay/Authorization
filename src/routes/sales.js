@@ -18,6 +18,9 @@ router.post('/', caslMiddleware('create', 'sales'), async (req, res) => {
 });
 
 // Read all
+// Read all
+// Note: central CASL middleware requires `read` permission on 'sales' before
+// any other permission is evaluated for a request.
 router.get('/', caslMiddleware('read', 'sales'), async (req, res) => {
     try {
         const sales = await Sales.find();
@@ -44,7 +47,7 @@ router.put('/:id', caslMiddleware('update', 'sales'), async (req, res) => {
         const sale = await Sales.findOneAndUpdate(
             { id: req.params.id },
             req.body,
-            { new: true }
+            { new: false }
         );
         if (!sale) return res.status(404).json({ error: 'Not found' });
         res.json(sale);

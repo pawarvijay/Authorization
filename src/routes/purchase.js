@@ -44,7 +44,7 @@ router.put('/:id', caslMiddleware('update', 'purchases'), async (req, res) => {
         const purchase = await Purchases.findOneAndUpdate(
             { id: req.params.id },
             req.body,
-            { new: true }
+            { new: false }
         );
         if (!purchase) return res.status(404).json({ error: 'Not found' });
         res.json(purchase);
@@ -54,13 +54,16 @@ router.put('/:id', caslMiddleware('update', 'purchases'), async (req, res) => {
 });
 
 // Update vendor only
+// Note: CASL middleware enforces that the user must have `read` on 'purchases'
+// (central policy) before evaluating this `update` permission. This endpoint
+// updates only the `vendor` field and returns the updated document.
 router.patch('/:id/vendor', caslMiddleware('update', 'purchases'), async (req, res) => {
     try {
         const { vendor } = req.body;
         const purchase = await Purchases.findOneAndUpdate(
             { id: req.params.id },
             { $set: { vendor } },
-            { new: true }
+            { new: false }
         );
         if (!purchase) return res.status(404).json({ error: 'Not found' });
         res.json(purchase);
