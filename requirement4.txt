@@ -1,0 +1,31 @@
+similar to C:\Users\vpawar\gap\ui\fireworks\Authorization\rbac2\db\rbac_generate.js
+
+generate a new script in C:\Users\vpawar\gap\ui\fireworks\Authorization\rbac2\db\formdata_generate.js to
+
+create purchases collection
+create sales collection
+
+add mock data to sales & purchases collection
+the data should have below fields
+    sales
+        id
+        item
+        quantity
+        price
+        date
+        size
+        color
+        brand
+
+    purchases
+        id
+        item
+        quantity
+        price
+        vendor
+        date
+        size
+        paymentStatus
+        deliveryStatus
+
+add 5 records to each collection

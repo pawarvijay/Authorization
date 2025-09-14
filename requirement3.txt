@@ -1,0 +1,6 @@
+userRoles
+add username & role name to userRoles collection
+
+rolepermissions
+add role name & permission name to rolePermissions collection
+    permission name should be combination of action, subject and field if exist

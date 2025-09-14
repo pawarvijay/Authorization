@@ -1,0 +1,46 @@
+add casl check in nodejs middleware to check roles and permissions for each api endpoint
+so that we don't have to write casl check code inside all end points
+
+add & update test cases to check below requirements
+Account Senior Manager - jackob
+    - can read, delete all sales
+    - can read, delete all purchases
+    - can update vendor of purchases
+
+Account Junior Manager - pristinema
+    - can read, update, create sales
+    - can read, update, create purchases
+
+Account Reporting - teetsi
+    - can read all sales
+    - can read all purchases
+
+Account Operations - daytona
+    - can read, update all sales
+    - can read, update all purchases
+
+Company CEO - sandeep
+    - can read dashboard
+    - can read, update, create, delete all sales
+    - can read, update, create, delete all purchases
+
+Account Intern - intern
+    - can read all sales
+    - can read all purchases
+    - update quantity of sales
+    - update description of purchases
+
+Do not use mock data for test cases
+use live mongo db data for test cases
+u can run node db/datasetup.js to create data in mongo db
+u can run node db/datapurge.js to delete all data from mongo db
+use supertest or any other library to make api calls in test cases
+use jest or any other library to create test cases
+use below users for test cases
+    - jackob
+    - pristinema
+    - teetsi
+    - daytona
+    - sandeep
+    - intern
+
