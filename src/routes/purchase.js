@@ -53,6 +53,22 @@ router.put('/:id', caslMiddleware('update', 'purchases'), async (req, res) => {
     }
 });
 
+// Update vendor only
+router.patch('/:id/vendor', caslMiddleware('update', 'purchases'), async (req, res) => {
+    try {
+        const { vendor } = req.body;
+        const purchase = await Purchases.findOneAndUpdate(
+            { id: req.params.id },
+            { $set: { vendor } },
+            { new: true }
+        );
+        if (!purchase) return res.status(404).json({ error: 'Not found' });
+        res.json(purchase);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Delete
 router.delete('/:id', caslMiddleware('delete', 'purchases'), async (req, res) => {
     try {

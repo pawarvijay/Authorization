@@ -51,4 +51,16 @@ describe('Purchase API', () => {
             expect(typeof res.body[0].id).toBe('string');
         }
     });
+
+    it('jackob can update vendor of a purchase', async () => {
+        // Create a purchase first
+        const createRes = await request(app).post('/api/purchase').send({ item: 'itemC', quantity: 1, price: 20, vendor: 'OriginalVendor', date: new Date(), size: 'S', paymentStatus: 'Paid', deliveryStatus: 'Delivered' });
+        expect(createRes.statusCode).toBe(201);
+        const purchasedId = createRes.body.id;
+
+        // Patch vendor
+        const patchRes = await request(app).patch(`/api/purchase/${purchasedId}/vendor`).send({ vendor: 'UpdatedVendor' });
+        expect(patchRes.statusCode).toBe(200);
+        expect(patchRes.body.vendor).toBe('UpdatedVendor');
+    });
 });
