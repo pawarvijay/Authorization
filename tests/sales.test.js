@@ -1,5 +1,7 @@
 
 const request = require('supertest');
+// Increase default Jest timeout for slow DB seed operations
+jest.setTimeout(30000);
 const express = require('express');
 const salesRoutes = require('../src/routes/sales');
 const mongoose = require('mongoose');

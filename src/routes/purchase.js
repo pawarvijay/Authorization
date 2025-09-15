@@ -54,7 +54,7 @@ router.put('/:id', caslMiddleware('update', 'purchases'), async (req, res) => {
 });
 
 // updates only the `vendor` field and returns the updated document.
-router.patch('/:id/vendor', caslMiddleware('update', 'purchases'), async (req, res) => {
+router.patch('/:id/vendor', caslMiddleware('update', 'purchases', ['vendor']), async (req, res) => {
     try {
         const { vendor } = req.body;
         const purchase = await Purchases.findOneAndUpdate(

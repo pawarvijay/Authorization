@@ -1,4 +1,6 @@
 // test/rbac.e2e.test.js
+// Increase default Jest timeout for slow DB seed operations
+jest.setTimeout(30000);
 const request = require('supertest');
 const mongoose = require('mongoose');
 const express = require('express');
